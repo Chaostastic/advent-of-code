@@ -1,25 +1,28 @@
 #include <stdio.h>
-#define MAX_LINE_LENGTH 50
+#include <stdbool.h>
+#define MAX_LINE_LENGTH 100
 
 int stringLength(char* string);
-int getDigit(char *string, int position);
-int getCalValue(char *line);
+int toDigit(char *string, int position, bool includeText);
+int calibration(char *line, bool includeText);
+int sum(char *filename, bool includeText);
 
-int part1(char *filename) {
+int main(void) {
+    printf("Part 1: %d\n", sum("input.txt", false));
+    printf("Part 2: %d\n", sum("input.txt", true));
+}
+
+int sum(char *filename, bool includeText) {
     FILE *file = fopen(filename, "r");
 
     char line[MAX_LINE_LENGTH];
     int sum = 0;
     while (fgets(line, MAX_LINE_LENGTH, file)) {
-        sum += getCalValue(line);
+        sum += calibration(line, includeText);
     }
     return sum;
 
     fclose(file);
-}
-
-int main(void) {
-    printf("Part 1: %d\n", part1("input.txt"));
 }
 
 int stringLength(char* string) {
@@ -30,20 +33,33 @@ int stringLength(char* string) {
     return i;
 }
 
-int getDigit(char *string, int position) {
+int toDigit(char *string, int position, bool includeText) {
     char ch = string[position];
     if (ch >= '1' && ch <= '9') {
         return ch - '0';
     }
+    if (!includeText) return -1;
+    char *digits[] = {"one","two","three","four","five","six","seven","eight","nine"};
+    for (int i = 0; i < 9; ++i) {
+        int length = stringLength(digits[i]);
+        bool doesMatch = true;
+        for (int j = 0; j < length; ++j) {
+            if (digits[i][j] != string[position + j]) {
+                doesMatch = false;
+                break;
+            }
+        }
+        if (doesMatch) return i + 1;
+    }
     return -1;
 }
 
-int getCalValue(char *line) {
+int calibration(char *line, bool includeText) {
     int firstDigit = 0;
     int lastDigit;
     int length = stringLength(line);
     for (int i = 0; i < length; ++i) {
-        int digit = getDigit(line,i);
+        int digit = toDigit(line,i,includeText);
         if (digit == -1) continue;
         if (firstDigit == 0) {
             firstDigit = digit;
