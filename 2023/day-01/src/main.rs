@@ -1,7 +1,7 @@
 use std::fs;
 
 fn main() {
-    if let Ok(file_content) = readfile("input.txt") {
+    if let Ok(file_content) = readfile("./input.txt") {
         println!("Part 1: {}",cal_sum(&file_content, false));
         println!("Part 2: {}",cal_sum(&file_content, true));
     } else {
