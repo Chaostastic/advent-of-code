@@ -2,8 +2,8 @@ use std::fs;
 
 fn main() {
     if let Ok(file_content) = readfile("input.txt") {
-        println!("Part 1: {}",sum(&file_content, false));
-        println!("Part 2: {}",sum(&file_content, true));
+        println!("Part 1: {}",cal_sum(&file_content, false));
+        println!("Part 2: {}",cal_sum(&file_content, true));
     } else {
         println!("Could not read file");
     }
@@ -14,16 +14,16 @@ fn readfile(filepath: &str) -> Result<String, Box<dyn std::error::Error>> {
     Ok(file_content)
 }
 
-fn sum(file_content: &str, use_spelled_digits: bool) -> u32 {
+fn cal_sum(file_content: &str, use_spelled_digits: bool) -> u32 {
     let mut lines = file_content.split('\n');
     let mut sum: u32 = 0;
     while let Some(line) = lines.next() {
-        sum+= calibration(line, use_spelled_digits);
+        sum += cal_value(line, use_spelled_digits);
     }
     sum
 }
 
-fn calibration(line: &str, use_spelled_digits: bool) -> u32 {
+fn cal_value(line: &str, use_spelled_digits: bool) -> u32 {
     let mut chars = line.chars();
     let mut first_digit: u32 = 0;
     let mut last_digit: u32 = 0;
