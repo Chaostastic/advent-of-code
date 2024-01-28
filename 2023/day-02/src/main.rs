@@ -10,6 +10,7 @@ fn main() {
     if let Ok(file_content) = readfile("./input.txt") {
         let games = create_games(&file_content);
         println!("Part 1: {}",id_sum(&games));
+        println!("Part 2: {}",power_sum(&games));
     } else {
         println!("Could not read file");
     }
@@ -61,6 +62,20 @@ fn id_sum(games: &[Vec<Set>; 100]) -> u32 {
         }
         if possible {sum += id}
         id += 1;
+    }
+    sum
+}
+
+fn power_sum(games: &[Vec<Set>; 100]) -> u32 {
+    let mut sum: u32 = 0;
+    for game in games {
+        let mut minimum = Set {red: 0, green: 0, blue: 0};
+        for set in game {
+            if set.red > minimum.red {minimum.red = set.red}
+            if set.green > minimum.green {minimum.green = set.green}
+            if set.blue > minimum.blue {minimum.blue = set.blue}
+        }
+        sum += minimum.red * minimum.green * minimum.blue;
     }
     sum
 }
